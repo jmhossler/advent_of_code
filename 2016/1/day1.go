@@ -131,8 +131,10 @@ func main() {
 		}
 	}
 
-	fmt.Printf("Distance: %d\n", abs(n)+abs(e))
+	fmt.Println("pt1 Correct answer: 271")
+	fmt.Printf("Distance: %d\n\n", abs(n)+abs(e))
 
+	fmt.Println("pt2 Correct answer: 153")
 	fmt.Printf("First visited twice: %d %d\n", first_visited_twice.n, first_visited_twice.e)
 	fmt.Printf("Distance: %d\n", abs(first_visited_twice.n)+abs(first_visited_twice.e))
 }
