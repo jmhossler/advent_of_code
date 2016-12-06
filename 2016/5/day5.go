@@ -16,21 +16,17 @@ func main() {
 
 	f := bufio.NewWriter(os.Stdout)
 
-	var password string
+	var password []byte
 	var harder_password [8]byte
 	slots := []int{0, 0, 0, 0, 0, 0, 0, 0}
 	for index := 0; len(password) < 8 || !slots_filled(slots); index++ {
 		str_rep := strconv.Itoa(index)
-		new_data := data
-		for _, val := range str_rep {
-			new_data = append(new_data, byte(val))
-		}
-		//fmt.Printf("Str_Rep of %s + %d: %s\n", data, index, new_data)
+		new_data := append(data, []byte(str_rep)...)
 		hash = md5.Sum(new_data)
 		str_hash := fmt.Sprintf("%x", hash)
 		if check_hash(str_hash) {
 			if len(password) < 8 {
-				password += string([]byte{str_hash[5]})
+				password = append(password, byte(str_hash[5]))
 			}
 			i, err := strconv.Atoi(string([]byte{str_hash[5]}))
 			if i < 8 && slots[i] == 0 && err == nil {
