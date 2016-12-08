@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Day 7 for Advent of Code 2016")
+	fmt.Println("Day 7 of Advent of Code 2016")
 
 	information := read_input()
 

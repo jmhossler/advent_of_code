@@ -16,7 +16,7 @@ type Room struct {
 }
 
 func main() {
-	fmt.Println("Day 4 Advent of Code 2016")
+	fmt.Println("Day 4 of Advent of Code 2016")
 
 	fp, err := os.Open("input")
 	check(err)

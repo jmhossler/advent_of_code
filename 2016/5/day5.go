@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Day 5 solution Advent of Code 2016")
+	fmt.Println("Day 5 of Advent of Code 2016")
 
 	data := []byte("reyedfim")
 	hash := md5.Sum(data)

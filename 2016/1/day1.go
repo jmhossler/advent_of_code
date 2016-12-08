@@ -14,7 +14,7 @@ type Coord struct {
 }
 
 func main() {
-	fmt.Println("Day 1 of 2016 Advent of Code challenge")
+	fmt.Println("Day 1 of Advent of Code 2016")
 	data, err := ioutil.ReadFile("input")
 	if err != nil {
 		log.Fatal(err)

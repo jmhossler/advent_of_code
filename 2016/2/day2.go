@@ -30,7 +30,7 @@ var D rune = 'D'
 var new_keypad = [][]*rune{[]*rune{nil, nil, &one, nil, nil}, []*rune{nil, &two, &three, &four, nil}, []*rune{&five, &six, &seven, &eight, &nine}, []*rune{nil, &A, &B, &C, nil}, []*rune{nil, nil, &D, nil, nil}}
 
 func main() {
-	fmt.Println("vim-go")
+	fmt.Println("Day 2 of Advent of Code 2016")
 
 	keypad = [][]int{[]int{1, 2, 3}, []int{4, 5, 6}, []int{7, 8, 9}}
 
