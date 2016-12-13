@@ -50,7 +50,8 @@ func read_input(f *os.File) []Floor {
 }
 
 func min_path(f []Floor) int {
-	paths := find_moves(State{f, 0, 0})
+	states_visited := []State{}
+	paths := find_moves(State{f, 0, 0}, &states_visited)
 	for len(paths) > 0 {
 		curr_state := paths[0]
 		fmt.Println(curr_state.distance)
@@ -59,12 +60,12 @@ func min_path(f []Floor) int {
 		}
 
 		paths = paths[1:]
-		paths = append(paths, find_moves(curr_state)...)
+		paths = append(paths, find_moves(curr_state, &states_visited)...)
 	}
 	return -1
 }
 
-func find_moves(s State) []State {
+func find_moves(s State, v *[]State) []State {
 	var ret = []State{}
 	floors := s.floors
 	for i := 0; i < len(floors[s.floor]); i++ {
@@ -75,7 +76,11 @@ func find_moves(s State) []State {
 			if is_valid_floor(new_floor_up) {
 				new_floors := floors
 				new_floors[s.floor+1] = new_floor_up
-				ret = append(ret, State{new_floors, s.distance + 1, s.floor + 1})
+				new_state := State{new_floors, s.distance + 1, s.floor + 1}
+				if !has_state(*v, new_state) {
+					ret = append(ret, new_state)
+					*v = append(*v, new_state)
+				}
 			}
 		}
 		if s.floor-1 >= 0 {
@@ -83,7 +88,11 @@ func find_moves(s State) []State {
 			if is_valid_floor(new_floor_down) {
 				new_floors := floors
 				new_floors[s.floor-1] = new_floor_down
-				ret = append(ret, State{new_floors, s.distance + 1, s.floor - 1})
+				new_state := State{new_floors, s.distance + 1, s.floor - 1}
+				if !has_state(*v, new_state) {
+					ret = append(ret, new_state)
+					*v = append(*v, new_state)
+				}
 			}
 		}
 		for j := i + 1; j < len(floors[s.floor]); j++ {
@@ -92,7 +101,11 @@ func find_moves(s State) []State {
 				if is_valid_floor(new_floor_up) {
 					new_floors := floors
 					new_floors[s.floor+1] = new_floor_up
-					ret = append(ret, State{new_floors, s.distance + 1, s.floor + 1})
+					new_state := State{new_floors, s.distance + 1, s.floor + 1}
+					if !has_state(*v, new_state) {
+						ret = append(ret, new_state)
+						*v = append(*v, new_state)
+					}
 				}
 			}
 			if s.floor-1 >= 0 {
@@ -100,12 +113,59 @@ func find_moves(s State) []State {
 				if is_valid_floor(new_floor_down) {
 					new_floors := floors
 					new_floors[s.floor-1] = new_floor_down
-					ret = append(ret, State{new_floors, s.distance + 1, s.floor - 1})
+					new_state := State{new_floors, s.distance + 1, s.floor - 1}
+					if !has_state(*v, new_state) {
+						ret = append(ret, new_state)
+						*v = append(*v, new_state)
+					}
 				}
 			}
 		}
 	}
 	return ret
+}
+
+func has_state(states []State, s State) bool {
+	for _, state := range states {
+		if state.floor == s.floor {
+			if len(state.floors) == len(s.floors) {
+				if equal_floors(state.floors, s.floors) {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+func equal_floors(a []Floor, b []Floor) bool {
+	for i := 0; i < len(a); i++ {
+		if !equal_floor(a[i], b[i]) {
+			return false
+		}
+	}
+	return true
+}
+
+func equal_floor(a Floor, b Floor) bool {
+	if len(a) == len(b) {
+		for _, item := range a {
+			if !has_item(b, item) {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
+
+func has_item(f Floor, i Item) bool {
+	for _, item := range f {
+		if item.name == i.name && item.description == i.description {
+			return true
+		}
+	}
+	return false
 }
 
 func is_valid_floor(floor Floor) bool {
