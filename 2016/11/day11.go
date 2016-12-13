@@ -1,92 +1,76 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
 
-var floors = [][]string{
-	[]string{"PRG", "PM"},
-	[]string{"COG", "CUG", "RUG", "PLG"},
-	[]string{"COM", "CUM", "RUM", "PLM"},
-	[]string{},
-}
-
-type Floor struct {
-	items []Item
-}
+type Floor []Item
 
 type Item struct {
 	name        string
 	description string
 }
 
-var prg = Item{"promethium", "generator"}
-var prm = Item{"promethium", "microchip"}
-var cog = Item{"cobalt", "generator"}
-var cug = Item{"curium", "generator"}
-var rug = Item{"ruthenium", "generator"}
-var plg = Item{"plutonium", "generator"}
-var com = Item{"cobalt", "microchip"}
-var cum = Item{"curium", "microchip"}
-var rum = Item{"ruthenium", "microchip"}
-var plm = Item{"plutonium", "microchip"}
+type State struct {
+	floors          []Floor
+	distance, floor int
+}
 
 func main() {
 	fmt.Println("Day 11 of Advent of Code 2016")
-	var floors = [][]Item{[]Item{prg, prm}, []Item{cog, cug, rug, plg}, []Item{com, cum, rum, plm}, []item{}}
+	var floors = read_input(os.Stdin)
 
-	fmt.Println(floors)
-	min := make_move(floors, 0)
+	min := min_path(floors)
 
 	fmt.Printf("Part 1: %d\n", min)
 }
 
-func make_move(floors [][]Item, floor int) int {
-	if is_completed() {
-		return 0
-	} else {
-		min := 100000000
-		if floor == 0 {
-			moves := find_moves(floors[0], floors[1])
-			for _, move := range moves {
-				rank := make_move(apply(floors, move, 1), floor+1)
-				if rank < min {
-					min = rank
-				}
-			}
-		} else {
-			moves_down := find_moves(floors[floor], floors[floor-1])
-			for _, move := range moves_down {
-				rank := make_move(apply(floors, move, -1), floor-1)
-				if rank < min {
-					min = rank
-				}
-			}
-			moves_up := find_moves(floors[floor], floors[floor+1])
-			for _, move := range moves_up {
-				rank := make_move(apply(floors, move, 1), floor+1)
-				if rank < min {
-					min = rank
+func read_input(f *os.File) []Floor {
+	scanner := bufio.NewScanner(f)
+	var floors []Floor
+	for scanner.Scan() {
+		line := scanner.Text()
+		var floor Floor
+		info := strings.Fields(line)
+		for i := range info {
+			if info[i] == "a" {
+				if info[i+2][:len(info[i+2])-1] == "microchip" {
+					floor = append(floor, Item{strings.Replace(info[i+1], "-compatible", "", -1), info[i+2][:len(info[i+2])-1]})
+				} else {
+					floor = append(floor, Item{info[i+1], info[i+2][:len(info[i+2])-1]})
 				}
 			}
 		}
-		return min
+		floors = append(floors, floor)
 	}
+	return floors
 }
 
-func apply(floors [][]Item, move []Item, dir int) [][]Item {
-	var ret = make([][]Item, 4)
+func min_path(f []Floor) int {
+	paths := find_moves(State{f, 0, 0})
+	for len(paths) > 0 {
+		curr_state, paths := paths[len(paths)-1], paths[:len(paths)-1]
+		if is_completed(curr_state.floors) {
+			return curr_state.distance
+		}
+
+		paths = append(paths, find_moves(curr_state)...)
+	}
+	return -1
+}
+
+func find_moves(s State) []State {
+	var ret = []State{}
 	// TODO
 	return ret
 }
 
-func find_moves(from, to []Item) [][]Item {
-	var ret = [][]Item{}
-	// TODO
-	return ret
-}
-
-func is_completed() bool {
+func is_completed(floors []Floor) bool {
 	for i := 0; i < 3; i++ {
-		if len(floors[i]) != 1 {
+		if len(floors[i]) > 0 {
 			return false
 		}
 	}
