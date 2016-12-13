@@ -23,6 +23,7 @@ func main() {
 	fmt.Println("Day 11 of Advent of Code 2016")
 	var floors = read_input(os.Stdin)
 
+	fmt.Println(floors)
 	min := min_path(floors)
 
 	fmt.Printf("Part 1: %d\n", min)
@@ -37,10 +38,10 @@ func read_input(f *os.File) []Floor {
 		info := strings.Fields(line)
 		for i := range info {
 			if info[i] == "a" {
-				if info[i+2][:len(info[i+2])-1] == "microchip" {
-					floor = append(floor, Item{strings.Replace(info[i+1], "-compatible", "", -1), info[i+2][:len(info[i+2])-1]})
+				if info[i+2][0] == 'm' {
+					floor = append(floor, Item{strings.Replace(info[i+1], "-compatible", "", -1), "microchip"})
 				} else {
-					floor = append(floor, Item{info[i+1], info[i+2][:len(info[i+2])-1]})
+					floor = append(floor, Item{info[i+1], "generator"})
 				}
 			}
 		}
