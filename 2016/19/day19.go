@@ -9,14 +9,12 @@ var numElves = flag.Int("n", 3017957, "Number of elves")
 
 func main() {
 	flag.Parse()
-	fmt.Println("Day 19 of Advent of Code 2016")
+	//fmt.Println("Day 19 of Advent of Code 2016")
 
-	var elf int
-	elf = getElf(*numElves)
-	fmt.Printf("Part 1: %d\n", elf)
+	elf1 := getElf(*numElves)
 
-	elf = getElfPt2(*numElves)
-	fmt.Printf("Part 2: %d elves - %d final\n", *numElves, elf)
+	elf2 := getElfPt2(*numElves)
+	fmt.Printf("%d-%d-%d\n", *numElves, elf1, elf2)
 }
 
 func getElfPt2(numElves int) int {
@@ -31,9 +29,13 @@ func getElfPt2(numElves int) int {
 }
 
 func getElf(numElves int) int {
-	pow := 1
-	for pow*2 < numElves {
-		pow = pow * 2
+	binary := fmt.Sprintf("%b", numElves)
+	sol := 1
+	for i := 1; i < len(binary); i++ {
+		if binary[i] == '1' {
+			sol += 1 << uint(len(binary)-i)
+		}
 	}
-	return 2*(numElves-pow) + 1
+
+	return sol
 }
