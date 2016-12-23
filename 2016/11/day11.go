@@ -7,116 +7,121 @@ import (
 	"strings"
 )
 
-type Floor []Item
+type floor []item
 
-type Item struct {
+type item struct {
 	name        string
 	description string
 }
 
-type State struct {
-	floors          []Floor
-	distance, floor int
+type state struct {
+	floors            []floor
+	distance, floorID int
 }
+
+const (
+	microchip = "microchip"
+	generator = "generator"
+)
 
 func main() {
 	fmt.Println("Day 11 of Advent of Code 2016")
-	var floors = read_input(os.Stdin)
+	var floors = readInput(os.Stdin)
 
-	min := min_path(floors)
+	min := minPath(floors)
 
 	fmt.Printf("Part 1: %d\n", min)
 }
 
-func read_input(f *os.File) []Floor {
+func readInput(f *os.File) []floor {
 	scanner := bufio.NewScanner(f)
-	var floors []Floor
+	var floors []floor
 	for scanner.Scan() {
 		line := scanner.Text()
-		var floor Floor
+		var fl floor
 		info := strings.Fields(line)
 		for i := range info {
 			if info[i] == "a" {
 				if info[i+2][0] == 'm' {
-					floor = append(floor, Item{strings.Replace(info[i+1], "-compatible", "", -1), "microchip"})
+					fl = append(fl, item{strings.Replace(info[i+1], "-compatible", "", -1), "microchip"})
 				} else {
-					floor = append(floor, Item{info[i+1], "generator"})
+					fl = append(fl, item{info[i+1], "generator"})
 				}
 			}
 		}
-		floors = append(floors, floor)
+		floors = append(floors, fl)
 	}
 	return floors
 }
 
-func min_path(f []Floor) int {
-	states_visited := []State{}
-	paths := find_moves(State{f, 0, 0}, &states_visited)
+func minPath(f []floor) int {
+	statesVisited := []state{}
+	paths := findMoves(state{f, 0, 0}, &statesVisited)
 	for len(paths) > 0 {
-		curr_state := paths[0]
-		fmt.Println(curr_state.distance)
-		if is_completed(curr_state.floors) {
-			return curr_state.distance
+		currState := paths[0]
+		fmt.Println(currState.distance)
+		if isCompleted(currState.floors) {
+			return currState.distance
 		}
 
 		paths = paths[1:]
-		paths = append(paths, find_moves(curr_state, &states_visited)...)
+		paths = append(paths, findMoves(currState, &statesVisited)...)
 	}
 	return -1
 }
 
-func find_moves(s State, v *[]State) []State {
-	var ret = []State{}
+func findMoves(s state, v *[]state) []state {
+	var ret = []state{}
 	floors := s.floors
-	for i := 0; i < len(floors[s.floor]); i++ {
-		var new_floor_up Floor
-		var new_floor_down Floor
-		if s.floor+1 < len(floors) {
-			new_floor_up = append(floors[s.floor+1], floors[s.floor][i])
-			if is_valid_floor(new_floor_up) {
-				new_floors := floors
-				new_floors[s.floor+1] = new_floor_up
-				new_state := State{new_floors, s.distance + 1, s.floor + 1}
-				if !has_state(*v, new_state) {
-					ret = append(ret, new_state)
-					*v = append(*v, new_state)
+	for i := 0; i < len(floors[s.floorID]); i++ {
+		var newFloorUp floor
+		var newFloorDown floor
+		if s.floorID+1 < len(floors) {
+			newFloorUp = append(floors[s.floorID+1], floors[s.floorID][i])
+			if isValidFloor(newFloorUp) {
+				newFloors := floors
+				newFloors[s.floorID+1] = newFloorUp
+				newState := state{newFloors, s.distance + 1, s.floorID + 1}
+				if !hasState(*v, newState) {
+					ret = append(ret, newState)
+					*v = append(*v, newState)
 				}
 			}
 		}
-		if s.floor-1 >= 0 {
-			new_floor_down = append(floors[s.floor-1], floors[s.floor][i])
-			if is_valid_floor(new_floor_down) {
-				new_floors := floors
-				new_floors[s.floor-1] = new_floor_down
-				new_state := State{new_floors, s.distance + 1, s.floor - 1}
-				if !has_state(*v, new_state) {
-					ret = append(ret, new_state)
-					*v = append(*v, new_state)
+		if s.floorID-1 >= 0 {
+			newFloorDown = append(floors[s.floorID-1], floors[s.floorID][i])
+			if isValidFloor(newFloorDown) {
+				newFloors := floors
+				newFloors[s.floorID-1] = newFloorDown
+				newState := state{newFloors, s.distance + 1, s.floorID - 1}
+				if !hasState(*v, newState) {
+					ret = append(ret, newState)
+					*v = append(*v, newState)
 				}
 			}
 		}
-		for j := i + 1; j < len(floors[s.floor]); j++ {
-			if s.floor+1 < len(floors) {
-				new_floor_up = append(new_floor_up, floors[s.floor][j])
-				if is_valid_floor(new_floor_up) {
-					new_floors := floors
-					new_floors[s.floor+1] = new_floor_up
-					new_state := State{new_floors, s.distance + 1, s.floor + 1}
-					if !has_state(*v, new_state) {
-						ret = append(ret, new_state)
-						*v = append(*v, new_state)
+		for j := i + 1; j < len(floors[s.floorID]); j++ {
+			if s.floorID+1 < len(floors) {
+				newFloorUp = append(newFloorUp, floors[s.floorID][j])
+				if isValidFloor(newFloorUp) {
+					newFloors := floors
+					newFloors[s.floorID+1] = newFloorUp
+					newState := state{newFloors, s.distance + 1, s.floorID + 1}
+					if !hasState(*v, newState) {
+						ret = append(ret, newState)
+						*v = append(*v, newState)
 					}
 				}
 			}
-			if s.floor-1 >= 0 {
-				new_floor_down = append(new_floor_down, floors[s.floor][j])
-				if is_valid_floor(new_floor_down) {
-					new_floors := floors
-					new_floors[s.floor-1] = new_floor_down
-					new_state := State{new_floors, s.distance + 1, s.floor - 1}
-					if !has_state(*v, new_state) {
-						ret = append(ret, new_state)
-						*v = append(*v, new_state)
+			if s.floorID-1 >= 0 {
+				newFloorDown = append(newFloorDown, floors[s.floorID][j])
+				if isValidFloor(newFloorDown) {
+					newFloors := floors
+					newFloors[s.floorID-1] = newFloorDown
+					newState := state{newFloors, s.distance + 1, s.floorID - 1}
+					if !hasState(*v, newState) {
+						ret = append(ret, newState)
+						*v = append(*v, newState)
 					}
 				}
 			}
@@ -125,11 +130,11 @@ func find_moves(s State, v *[]State) []State {
 	return ret
 }
 
-func has_state(states []State, s State) bool {
-	for _, state := range states {
-		if state.floor == s.floor {
-			if len(state.floors) == len(s.floors) {
-				if equal_floors(state.floors, s.floors) {
+func hasState(states []state, s state) bool {
+	for _, st := range states {
+		if st.floorID == s.floorID {
+			if len(st.floors) == len(s.floors) {
+				if equalFloors(st.floors, s.floors) {
 					return true
 				}
 			}
@@ -138,19 +143,19 @@ func has_state(states []State, s State) bool {
 	return false
 }
 
-func equal_floors(a []Floor, b []Floor) bool {
+func equalFloors(a []floor, b []floor) bool {
 	for i := 0; i < len(a); i++ {
-		if !equal_floor(a[i], b[i]) {
+		if !equalFloor(a[i], b[i]) {
 			return false
 		}
 	}
 	return true
 }
 
-func equal_floor(a Floor, b Floor) bool {
+func equalFloor(a floor, b floor) bool {
 	if len(a) == len(b) {
-		for _, item := range a {
-			if !has_item(b, item) {
+		for _, it := range a {
+			if !hasItem(b, it) {
 				return false
 			}
 		}
@@ -159,69 +164,69 @@ func equal_floor(a Floor, b Floor) bool {
 	return false
 }
 
-func has_item(f Floor, i Item) bool {
-	for _, item := range f {
-		if item.name == i.name && item.description == i.description {
+func hasItem(f floor, i item) bool {
+	for _, it := range f {
+		if it.name == i.name && it.description == i.description {
 			return true
 		}
 	}
 	return false
 }
 
-func is_valid_floor(floor Floor) bool {
-	floor = remove_matches(floor)
-	return !(has_microchip(floor) && has_generator(floor))
+func isValidFloor(fl floor) bool {
+	fl = removeMatches(fl)
+	return !(hasMicrochip(fl) && hasGenerator(fl))
 }
 
-func remove_matches(f Floor) Floor {
-	var new_floor Floor
-	for _, item := range f {
-		if !has_match(f, item) {
-			new_floor = append(new_floor, item)
+func removeMatches(f floor) floor {
+	var newFloor floor
+	for _, it := range f {
+		if !hasMatch(f, it) {
+			newFloor = append(newFloor, it)
 		}
 	}
-	return new_floor
+	return newFloor
 }
 
-func has_match(f Floor, i Item) bool {
-	for _, item := range f {
-		if is_match(i, item) {
+func hasMatch(f floor, i item) bool {
+	for _, it := range f {
+		if isMatch(i, it) {
 			return true
 		}
 	}
 	return false
 }
 
-func is_match(a Item, b Item) bool {
+func isMatch(a item, b item) bool {
 	if a.name == b.name {
-		if a.description == "microchip" {
-			return b.description == "generator"
-		} else {
-			return b.description == "microchip"
+		if a.description == generator {
+			return b.description == generator
 		}
+		return b.description == microchip
+
 	}
 	return false
 }
 
-func has_microchip(f Floor) bool {
-	for _, item := range f {
-		if item.description == "microchip" {
+func hasMicrochip(f floor) bool {
+	for _, it := range f {
+		if it.description == microchip {
 			return true
 		}
 	}
 	return false
 }
 
-func has_generator(f Floor) bool {
-	for _, item := range f {
-		if item.description == "generator" {
+func hasGenerator(f floor) bool {
+	for _, it := range f {
+		if it.description == generator {
 			return true
 		}
 	}
 	return false
 }
 
-func is_completed(floors []Floor) bool {
+func isCompleted(floors []floor) bool {
 	for i := 0; i < 3; i++ {
 		if len(floors[i]) > 0 {
 			return false

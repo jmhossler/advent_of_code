@@ -22,7 +22,7 @@ func getElfPt2(numElves int) int {
 	for i := 1; i < numElves; i++ {
 		elf = elf%i + 1
 		if elf > (i+1)/2 {
-			elf += 1
+			elf++
 		}
 	}
 	return elf

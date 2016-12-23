@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type Tri struct {
+type tri struct {
 	x, y, z int
 }
 
@@ -24,15 +24,15 @@ func main() {
 	for _, val := range strings.Split(input, "\n") {
 		fmt.Println(val)
 
-		x := get_tri(val)
+		x := getTri(val)
 
-		if x.is_valid() {
-			count += 1
+		if x.isValid() {
+			count++
 		}
 	}
 
-	var a, b, c Tri
-	new_count := 0
+	var a, b, c tri
+	newCount := 0
 	iter := 0
 	for _, val := range strings.Split(input, "\n") {
 		vals := strings.Fields(val)
@@ -51,23 +51,23 @@ func main() {
 			b.z, _ = strconv.Atoi(vals[1])
 			c.z, _ = strconv.Atoi(vals[2])
 			iter = 0
-			if a.is_valid() {
-				new_count += 1
+			if a.isValid() {
+				newCount++
 			}
-			if b.is_valid() {
-				new_count += 1
+			if b.isValid() {
+				newCount++
 			}
-			if c.is_valid() {
-				new_count += 1
+			if c.isValid() {
+				newCount++
 			}
 		}
 	}
 
 	fmt.Printf("Part 1 solution: %d\n", count)
-	fmt.Printf("Part 2 solution: %d\n", new_count)
+	fmt.Printf("Part 2 solution: %d\n", newCount)
 }
 
-func (t Tri) is_valid() bool {
+func (t tri) isValid() bool {
 	if t.x+t.y <= t.z {
 		return false
 	}
@@ -80,13 +80,13 @@ func (t Tri) is_valid() bool {
 	return true
 }
 
-func get_tri(line string) Tri {
+func getTri(line string) tri {
 	split := strings.Fields(line)
 	var vals []int
 	for _, val := range split {
-		new_val, _ := strconv.Atoi(val)
-		vals = append(vals, new_val)
+		newVal, _ := strconv.Atoi(val)
+		vals = append(vals, newVal)
 	}
 
-	return Tri{vals[0], vals[1], vals[2]}
+	return tri{vals[0], vals[1], vals[2]}
 }

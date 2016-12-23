@@ -11,35 +11,35 @@ import (
 func main() {
 	fmt.Println("Day 7 of Advent of Code 2016")
 
-	information := read_input()
+	information := readInput()
 
-	var count_tls, count_ssl int
+	var countTLS, countSSL int
 	for i := 0; i < len(information); i++ {
-		brackets := extract_brackets(information[i])
+		brackets := extractBrackets(information[i])
 		supernet := information[i]
 		for _, str := range brackets {
 			supernet = strings.Replace(supernet, str, "", -1)
 		}
-		ABAs := get_abas(supernet)
+		ABAs := getAbas(supernet)
 		var BABs []string
 		for _, str := range brackets {
-			BABs = append(BABs, get_abas(str[1:len(str)-1])...)
+			BABs = append(BABs, getAbas(str[1:len(str)-1])...)
 		}
-		if validate_abas(ABAs, BABs) {
-			count_ssl += 1
+		if validateAbas(ABAs, BABs) {
+			countSSL++
 		}
-		if valid_brackets(brackets) {
-			if has_abba(information[i]) {
-				count_tls += 1
+		if validBrackets(brackets) {
+			if hasAbba(information[i]) {
+				countTLS++
 			}
 		}
 	}
 
-	fmt.Printf("Part 1: %d IPs support TLS\n", count_tls)
-	fmt.Printf("Part 2: %d IPs support SSL\n", count_ssl)
+	fmt.Printf("Part 1: %d IPs support TLS\n", countTLS)
+	fmt.Printf("Part 2: %d IPs support SSL\n", countSSL)
 }
 
-func get_abas(str string) []string {
+func getAbas(str string) []string {
 	var abas []string
 	for i := 1; i < len(str)-1; i++ {
 		if str[i-1] == str[i+1] {
@@ -49,10 +49,10 @@ func get_abas(str string) []string {
 	return abas
 }
 
-func validate_abas(ABAs, BABs []string) bool {
+func validateAbas(ABAs, BABs []string) bool {
 	for _, aba := range ABAs {
 		for _, bab := range BABs {
-			if aba_match(aba, bab) {
+			if abaMatch(aba, bab) {
 				return true
 			}
 		}
@@ -60,20 +60,20 @@ func validate_abas(ABAs, BABs []string) bool {
 	return false
 }
 
-func aba_match(aba, bab string) bool {
+func abaMatch(aba, bab string) bool {
 	return aba[1] == bab[0] && aba[0] == bab[1]
 }
 
-func valid_brackets(b []string) bool {
+func validBrackets(b []string) bool {
 	for _, str := range b {
-		if has_abba(str) {
+		if hasAbba(str) {
 			return false
 		}
 	}
 	return true
 }
 
-func has_abba(str string) bool {
+func hasAbba(str string) bool {
 	var a, b byte
 	a, b = str[0], str[1]
 	for i := 2; i < len(str)-1; i++ {
@@ -85,13 +85,13 @@ func has_abba(str string) bool {
 	return false
 }
 
-func extract_brackets(str string) []string {
+func extractBrackets(str string) []string {
 	re := regexp.MustCompile("\\[[[:alpha:]]+\\]")
 
 	return re.FindAllString(str, -1)
 }
 
-func read_input() []string {
+func readInput() []string {
 	f, err := os.Open("input")
 	check(err)
 

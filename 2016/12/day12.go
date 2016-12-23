@@ -18,7 +18,7 @@ var registers = map[string]int{
 func main() {
 	fmt.Println("Day 12 of Advent of Code 2016")
 
-	commands := read_input(os.Stdin)
+	commands := readInput(os.Stdin)
 
 	for i := 0; i < len(commands); {
 		//fmt.Printf("%d-%s: %v\n", i, commands[i], registers)
@@ -69,7 +69,7 @@ func execute(cmd string) int {
 	return 1
 }
 
-func read_input(f *os.File) []string {
+func readInput(f *os.File) []string {
 	scanner := bufio.NewScanner(f)
 	data := []string{}
 	for scanner.Scan() {

@@ -9,10 +9,10 @@ import (
 	"strings"
 )
 
-type Room struct {
-	encrypted_name string
-	id             int
-	checksum       string
+type room struct {
+	encryptedName string
+	id            int
+	checksum      string
 }
 
 func main() {
@@ -23,42 +23,42 @@ func main() {
 
 	scanner := bufio.NewScanner(fp)
 
-	var rooms []Room
+	var rooms []room
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		new_room := Room{get_name(line), get_id(line), get_checksum(line)}
+		newRoom := room{getName(line), getID(line), getChecksum(line)}
 		//fmt.Println(get_checksum(line))
 		//fmt.Println(get_id(line))
 		//fmt.Println(get_name(line))
-		rooms = append(rooms, new_room)
+		rooms = append(rooms, newRoom)
 	}
 
 	sum := 0
-	var valid_rooms []Room
+	var validRooms []room
 	for _, room := range rooms {
-		if room.is_valid() {
-			valid_rooms = append(valid_rooms, room)
+		if room.isValid() {
+			validRooms = append(validRooms, room)
 			sum += room.id
 		}
 	}
 
 	fmt.Printf("Part 1: sum of valid rooms %d\n", sum)
 
-	fmt.Println("Number of valid rooms: ", len(valid_rooms))
-	for _, room := range valid_rooms {
-		unencrypted_name := rotate_string(room.encrypted_name, room.id)
-		fmt.Println(unencrypted_name, room.id)
+	fmt.Println("Number of valid rooms: ", len(validRooms))
+	for _, room := range validRooms {
+		unencryptedName := rotateString(room.encryptedName, room.id)
+		fmt.Println(unencryptedName, room.id)
 	}
 }
 
-func (r Room) is_valid() bool {
-	generated_checksum := create_checksum(r.encrypted_name)
+func (r room) isValid() bool {
+	generatedChecksum := createChecksum(r.encryptedName)
 	//fmt.Printf("Gen: %s\tGiven: %s, ans %v\n", generated_checksum, r.checksum, generated_checksum == r.checksum)
-	return generated_checksum == r.checksum
+	return generatedChecksum == r.checksum
 }
 
-func rotate_string(str string, n int) string {
+func rotateString(str string, n int) string {
 	shift, offset := rune(n%26), rune(26)
 
 	runes := []rune(str)
@@ -76,18 +76,18 @@ func rotate_string(str string, n int) string {
 	return string(runes)
 }
 
-func create_checksum(name string) string {
+func createChecksum(name string) string {
 	str := strings.Replace(name, "-", "", -1)
 
-	var m map[rune]int = make(map[rune]int)
+	var m = make(map[rune]int)
 
 	for _, val := range str {
-		m[val] += 1
+		m[val]++
 	}
 
 	checksum := ""
 	for i := 0; i < 5; i++ {
-		k := get_max(m)
+		k := getMax(m)
 		checksum += string(k)
 		delete(m, k)
 	}
@@ -96,7 +96,7 @@ func create_checksum(name string) string {
 	return checksum
 }
 
-func get_max(m map[rune]int) rune {
+func getMax(m map[rune]int) rune {
 	var max rune
 	for k := range m {
 		if m[k] > m[max] {
@@ -110,14 +110,14 @@ func get_max(m map[rune]int) rune {
 	return max
 }
 
-func get_checksum(line string) string {
+func getChecksum(line string) string {
 	re := regexp.MustCompile("\\[[[:alpha:]]{5}\\]")
 
 	str := re.FindString(line)
 	return str[1 : len(str)-1]
 }
 
-func get_id(line string) int {
+func getID(line string) int {
 	re := regexp.MustCompile("-\\d+")
 
 	str := re.FindString(line)
@@ -125,7 +125,7 @@ func get_id(line string) int {
 	return id
 }
 
-func get_name(line string) string {
+func getName(line string) string {
 	re := regexp.MustCompile("([[:alpha:]]+\\-)+")
 
 	str := re.FindString(line)

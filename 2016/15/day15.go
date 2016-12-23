@@ -17,7 +17,7 @@ func main() {
 	f, err := os.Open("input")
 	check(err)
 
-	input := read_input(f)
+	input := readInput(f)
 
 	var discs []disc
 	for _, line := range input {
@@ -30,30 +30,30 @@ func main() {
 	}
 
 	var time int
-	for time = 0; !is_success(discs, time); time++ {
+	for time = 0; !isSuccess(discs, time); time++ {
 	}
 
 	fmt.Printf("Part 1: %d\n", time)
 
 	discs = append(discs, disc{11, 0})
 
-	var new_time int
-	for new_time = 0; !is_success(discs, new_time); new_time++ {
+	var newTime int
+	for newTime = 0; !isSuccess(discs, newTime); newTime++ {
 	}
 
-	fmt.Printf("Part 2: %d\n", new_time)
+	fmt.Printf("Part 2: %d\n", newTime)
 }
 
-func is_success(ds []disc, initial_time int) bool {
+func isSuccess(ds []disc, initialTime int) bool {
 	for i, disc := range ds {
-		if !(rotate_disc(disc, i+initial_time+1) == 0) {
+		if !(rotateDisc(disc, i+initialTime+1) == 0) {
 			return false
 		}
 	}
 	return true
 }
 
-func rotate_disc(d disc, t int) int {
+func rotateDisc(d disc, t int) int {
 	return (d.initial + t) % d.positions
 }
 
@@ -63,7 +63,7 @@ func check(e error) {
 	}
 }
 
-func read_input(f *os.File) []string {
+func readInput(f *os.File) []string {
 	scanner := bufio.NewScanner(f)
 	data := []string{}
 	for scanner.Scan() {

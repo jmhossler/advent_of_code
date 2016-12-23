@@ -12,38 +12,37 @@ func main() {
 	fmt.Println("Day 5 of Advent of Code 2016")
 
 	data := []byte("reyedfim")
-	hash := md5.Sum(data)
 
 	f := bufio.NewWriter(os.Stdout)
 
 	var password []byte
-	var harder_password [8]byte
+	var harderPassword [8]byte
 	slots := []int{0, 0, 0, 0, 0, 0, 0, 0}
-	for index := 0; len(password) < 8 || !slots_filled(slots); index++ {
-		str_rep := strconv.Itoa(index)
-		new_data := append(data, []byte(str_rep)...)
-		hash = md5.Sum(new_data)
-		str_hash := fmt.Sprintf("%x", hash)
-		if check_hash(str_hash) {
+	for index := 0; len(password) < 8 || !slotsFilled(slots); index++ {
+		strRep := strconv.Itoa(index)
+		newData := append(data, []byte(strRep)...)
+		hash := md5.Sum(newData)
+		strHash := fmt.Sprintf("%x", hash)
+		if checkHash(strHash) {
 			if len(password) < 8 {
-				password = append(password, byte(str_hash[5]))
+				password = append(password, byte(strHash[5]))
 			}
-			i, err := strconv.Atoi(string([]byte{str_hash[5]}))
+			i, err := strconv.Atoi(string([]byte{strHash[5]}))
 			if i < 8 && slots[i] == 0 && err == nil {
 				//fmt.Fprintf(f, "%s: ", str_hash)
-				harder_password[i] = str_hash[6]
+				harderPassword[i] = strHash[6]
 				slots[i] = 1
-				display_b_pass(f, harder_password, slots)
+				displayBPass(f, harderPassword, slots)
 				f.Flush()
 			}
 		}
 	}
 
 	fmt.Printf("Part 1: %s\n", password)
-	fmt.Printf("Part 2: %s\n", harder_password)
+	fmt.Printf("Part 2: %s\n", harderPassword)
 }
 
-func display_b_pass(f *bufio.Writer, p [8]byte, s []int) {
+func displayBPass(f *bufio.Writer, p [8]byte, s []int) {
 	var str string
 	for i := 0; i < 8; i++ {
 		if s[i] == 1 {
@@ -52,14 +51,14 @@ func display_b_pass(f *bufio.Writer, p [8]byte, s []int) {
 			str += "_"
 		}
 	}
-	if slots_filled(s) {
+	if slotsFilled(s) {
 		fmt.Fprintf(f, "%s\n", str)
 	} else {
 		fmt.Fprintf(f, "%s\r", str)
 	}
 }
 
-func slots_filled(s []int) bool {
+func slotsFilled(s []int) bool {
 	for _, val := range s {
 		if val == 0 {
 			return false
@@ -74,6 +73,6 @@ func check(e error) {
 	}
 }
 
-func check_hash(h string) bool {
+func checkHash(h string) bool {
 	return h[:5] == "00000"
 }
