@@ -18,7 +18,7 @@ func main() {
 	input := scanner.Text()
 
 	for len(input) < *n {
-		input = step_string(input)
+		input = stepString(input)
 	}
 	input = input[:*n]
 
@@ -26,7 +26,7 @@ func main() {
 	fmt.Println(chksm)
 }
 
-func step_string(s string) string {
+func stepString(s string) string {
 	return s + "0" + invert(reverse(s))
 }
 
@@ -46,21 +46,21 @@ func checksum(s string) string {
 }
 
 func invert(s string) string {
-	var new_string []rune
+	var newString []rune
 	for _, c := range s {
 		if c == '1' {
-			new_string = append(new_string, '0')
+			newString = append(newString, '0')
 		} else {
-			new_string = append(new_string, '1')
+			newString = append(newString, '1')
 		}
 	}
-	return string(new_string)
+	return string(newString)
 }
 
 func reverse(s string) string {
-	var new_string []byte
+	var newString []byte
 	for i := len(s) - 1; i >= 0; i-- {
-		new_string = append(new_string, s[i])
+		newString = append(newString, s[i])
 	}
-	return string(new_string)
+	return string(newString)
 }

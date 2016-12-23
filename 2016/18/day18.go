@@ -20,7 +20,7 @@ func main() {
 	for _, s := range floor {
 		for _, c := range s {
 			if c == '.' {
-				count += 1
+				count++
 			}
 		}
 	}
@@ -71,9 +71,8 @@ func shouldTrap(left, center, right bool) bool {
 func isTrap(index int, s string) bool {
 	if index < 0 || index >= len(s) {
 		return false
-	} else {
-		return s[index] == '^'
 	}
+	return s[index] == '^'
 }
 
 func readInput(f *os.File) string {

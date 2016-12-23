@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type Range struct {
+type rnge struct {
 	low, high uint
 }
 
@@ -25,20 +25,20 @@ func main() {
 	fmt.Printf("Part 2: %d\n", lenSlots)
 }
 
-func readInput(f *os.File) []Range {
+func readInput(f *os.File) []rnge {
 	scanner := bufio.NewScanner(f)
-	data := []Range{}
+	data := []rnge{}
 	for scanner.Scan() {
 		line := scanner.Text()
 		fields := strings.Split(line, "-")
 		low, _ := strconv.ParseInt(fields[0], 10, 64)
 		high, _ := strconv.ParseInt(fields[1], 10, 64)
-		data = append(data, Range{low: uint(low), high: uint(high)})
+		data = append(data, rnge{low: uint(low), high: uint(high)})
 	}
 	return data
 }
 
-func getLowestSlot(lines []Range, base uint) uint {
+func getLowestSlot(lines []rnge, base uint) uint {
 	lowest := base
 	for _, r := range lines {
 		if inRange(r.low, r.high, lowest) {
@@ -48,21 +48,21 @@ func getLowestSlot(lines []Range, base uint) uint {
 	return lowest
 }
 
-func groupRanges(lines []Range) []Range {
-	newRange := []Range{}
+func groupRanges(lines []rnge) []rnge {
+	newRange := []rnge{}
 	for i := 0; i < len(lines); i++ {
 		high := lines[i].high
 		var j int
 		for j = i + 1; j < len(lines) && inRange(lines[i].low, high+1, lines[j].low); j++ {
 			high = lines[j].high
 		}
-		newRange = append(newRange, Range{lines[i].low, high})
+		newRange = append(newRange, rnge{lines[i].low, high})
 		i = j - 1
 	}
 	return newRange
 }
 
-func getLengthSlots(lines []Range) uint {
+func getLengthSlots(lines []rnge) uint {
 	length := lines[0].low
 	lowest := lines[0].low
 	high := lines[0].high
@@ -82,24 +82,22 @@ func getLengthSlots(lines []Range) uint {
 func max(a, b uint) uint {
 	if a > b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
-func shrinkRange(lines []Range, low uint) []Range {
+func shrinkRange(lines []rnge, low uint) []rnge {
 	if len(lines) > 0 && lines[0].low > low {
 		return lines[1:]
-	} else {
-		return lines
 	}
+	return lines
 }
 
-func mergeSort(r []Range) []Range {
+func mergeSort(r []rnge) []rnge {
 	if len(r) == 1 {
 		return r
 	}
-	newRange := make([]Range, len(r))
+	newRange := make([]rnge, len(r))
 	left := mergeSort(r[:len(r)/2])
 	right := mergeSort(r[len(r)/2:])
 	for i := 0; i < len(r); i++ {

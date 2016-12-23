@@ -11,53 +11,53 @@ import (
 var input = flag.String("s", "cuanljph", "string input")
 
 var hashes map[int]string
-var stretched_hashes map[int]string
+var stretchedHashes map[int]string
 
 func main() {
 	flag.Parse()
 	fmt.Println("Day 14 of Advent of Code 2016")
 	var index int
 	var keys []string
-	var stretched_keys []string
+	var stretchedKeys []string
 	hashes = make(map[int]string)
-	stretched_hashes = make(map[int]string)
+	stretchedHashes = make(map[int]string)
 
 	for len(keys) < 64 {
-		hash := get_hash(index)
+		hash := getHash(index)
 
-		if is_key(hashes, get_hash, hash, index) && len(keys) < 64 && !contains(keys, hash) {
+		if isKey(hashes, getHash, hash, index) && len(keys) < 64 && !contains(keys, hash) {
 			keys = append(keys, hash)
 		}
 
-		index += 1
+		index++
 	}
 	fmt.Printf("Part 1: %d\n", index-1)
 
-	var s_index int
-	for len(stretched_keys) < 64 {
-		stretched_hash := get_stretched(s_index)
+	var sIndex int
+	for len(stretchedKeys) < 64 {
+		stretchedHash := getStretched(sIndex)
 
-		if is_key(stretched_hashes, get_stretched, stretched_hash, s_index) && len(stretched_keys) < 64 && !contains(stretched_keys, stretched_hash) {
-			stretched_keys = append(stretched_keys, stretched_hash)
+		if isKey(stretchedHashes, getStretched, stretchedHash, sIndex) && len(stretchedKeys) < 64 && !contains(stretchedKeys, stretchedHash) {
+			stretchedKeys = append(stretchedKeys, stretchedHash)
 		}
-		s_index += 1
+		sIndex++
 	}
 
-	fmt.Printf("Part 2: %d\n", s_index-1)
+	fmt.Printf("Part 2: %d\n", sIndex-1)
 }
 
-func get_stretched(index int) string {
-	if stretched_hashes[index] == "" {
-		hash := get_hash(index)
+func getStretched(index int) string {
+	if stretchedHashes[index] == "" {
+		hash := getHash(index)
 		for i := 0; i < 2016; i++ {
 			hash = fmt.Sprintf("%x", md5.Sum([]byte(hash)))
 		}
-		stretched_hashes[index] = hash
+		stretchedHashes[index] = hash
 	}
-	return stretched_hashes[index]
+	return stretchedHashes[index]
 }
 
-func get_hash(index int) string {
+func getHash(index int) string {
 	if hashes[index] == "" {
 
 		hashes[index] = fmt.Sprintf("%x", md5.Sum([]byte(*input+strconv.Itoa(index))))
@@ -65,14 +65,14 @@ func get_hash(index int) string {
 	return hashes[index]
 }
 
-func is_key(src map[int]string, fn func(int) string, hash string, index int) bool {
-	if c, err := repeated_three(hash); err == nil {
+func isKey(src map[int]string, fn func(int) string, hash string, index int) bool {
+	if c, err := repeatedThree(hash); err == nil {
 		for i := index + 1; i <= index+1000; i++ {
-			new_hash := fn(i)
-			repeated, err := repeated_five(new_hash)
+			newHash := fn(i)
+			repeated, err := repeatedFive(newHash)
 			if err == nil {
-				for _, n_c := range repeated {
-					if c == n_c {
+				for _, nC := range repeated {
+					if c == nC {
 						return true
 					}
 				}
@@ -91,7 +91,7 @@ func contains(arr []string, s string) bool {
 	return false
 }
 
-func repeated_five(s string) ([]string, error) {
+func repeatedFive(s string) ([]string, error) {
 	matches := []string{}
 	for i := 0; i < len(s)-4; i++ {
 		if s[i] == s[i+1] && s[i] == s[i+2] && s[i] == s[i+3] && s[i] == s[i+4] {
@@ -101,12 +101,11 @@ func repeated_five(s string) ([]string, error) {
 
 	if len(matches) == 0 {
 		return []string{}, errors.New("Bad")
-	} else {
-		return matches, nil
 	}
+	return matches, nil
 }
 
-func repeated_three(s string) (string, error) {
+func repeatedThree(s string) (string, error) {
 	matches := []string{}
 
 	for i := 0; i < len(s)-2; i++ {
@@ -116,7 +115,7 @@ func repeated_three(s string) (string, error) {
 	}
 	if len(matches) == 0 {
 		return "", errors.New("Bad")
-	} else {
-		return matches[0], nil
 	}
+	return matches[0], nil
+
 }

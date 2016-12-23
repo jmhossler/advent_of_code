@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type Path struct {
+type path struct {
 	x, y int
 	path string
 }
@@ -24,7 +24,7 @@ func main() {
 }
 
 func shortestPath(p string) (string, string) {
-	visited := []Path{Path{0, 0, p}}
+	visited := []path{path{0, 0, p}}
 
 	var shortest []string
 	for len(visited) > 0 {
@@ -37,16 +37,16 @@ func shortestPath(p string) (string, string) {
 
 			code := getCode(currPath.path)
 			if isOpen(code[0]) && currPath.y > 0 {
-				visited = append(visited, Path{currPath.x, currPath.y - 1, currPath.path + "U"})
+				visited = append(visited, path{currPath.x, currPath.y - 1, currPath.path + "U"})
 			}
 			if isOpen(code[1]) && currPath.y < 3 {
-				visited = append(visited, Path{currPath.x, currPath.y + 1, currPath.path + "D"})
+				visited = append(visited, path{currPath.x, currPath.y + 1, currPath.path + "D"})
 			}
 			if isOpen(code[2]) && currPath.x > 0 {
-				visited = append(visited, Path{currPath.x - 1, currPath.y, currPath.path + "L"})
+				visited = append(visited, path{currPath.x - 1, currPath.y, currPath.path + "L"})
 			}
 			if isOpen(code[3]) && currPath.x < 3 {
-				visited = append(visited, Path{currPath.x + 1, currPath.y, currPath.path + "R"})
+				visited = append(visited, path{currPath.x + 1, currPath.y, currPath.path + "R"})
 			}
 		}
 	}

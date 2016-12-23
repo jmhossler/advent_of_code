@@ -8,49 +8,49 @@ import (
 	"strings"
 )
 
-type Bot struct {
-	values   []int
-	low_bot  bool
-	id_low   int
-	high_bot bool
-	id_high  int
+type bot struct {
+	values  []int
+	lowBot  bool
+	idLow   int
+	highBot bool
+	idHigh  int
 }
 
 func main() {
 	fmt.Println("Day 10 of Advent of Code 2016")
 
-	data := read_lines(os.Stdin)
-	bots := make(map[int]*Bot)
+	data := readLines(os.Stdin)
+	bots := make(map[int]*bot)
 
 	var output = make(map[int]*[]int)
 	for _, instr := range data {
 		fields := strings.Fields(instr)
-		var bot_id int
+		var botID int
 		if fields[0] == "value" {
-			bot_id, _ = strconv.Atoi(fields[5])
-			bot := bots[bot_id]
-			if bot == nil {
-				bots[bot_id] = new(Bot)
-				bot = bots[bot_id]
+			botID, _ = strconv.Atoi(fields[5])
+			refBot := bots[botID]
+			if refBot == nil {
+				bots[botID] = new(bot)
+				refBot = bots[botID]
 			}
 			val, _ := strconv.Atoi(fields[1])
-			bot.values = append(bot.values, val)
+			refBot.values = append(refBot.values, val)
 		} else {
-			bot_id, _ = strconv.Atoi(fields[1])
-			bot := bots[bot_id]
-			if bot == nil {
-				bots[bot_id] = new(Bot)
-				bot = bots[bot_id]
+			botID, _ = strconv.Atoi(fields[1])
+			refBot := bots[botID]
+			if refBot == nil {
+				bots[botID] = new(bot)
+				refBot = bots[botID]
 			}
-			id_low, _ := strconv.Atoi(fields[6])
-			bot_low := fields[5] == "bot"
-			id_high, _ := strconv.Atoi(fields[11])
-			bot_high := fields[10] == "bot"
+			idLow, _ := strconv.Atoi(fields[6])
+			botLow := fields[5] == "bot"
+			idHigh, _ := strconv.Atoi(fields[11])
+			botHigh := fields[10] == "bot"
 
-			bot.id_low = id_low
-			bot.low_bot = bot_low
-			bot.id_high = id_high
-			bot.high_bot = bot_high
+			refBot.idLow = idLow
+			refBot.lowBot = botLow
+			refBot.idHigh = idHigh
+			refBot.highBot = botHigh
 		}
 		//fmt.Printf("Instr: %s\nBot %d, vals %v, %v low -> %d; %v high -> %d\n", instr, bot_id, bots[bot_id].values, bots[bot_id].low_bot, bots[bot_id].id_low, bots[bot_id].high_bot, bots[bot_id].id_high)
 	}
@@ -59,7 +59,7 @@ func main() {
 		executed := []int{}
 		for k, b := range bots {
 			if len(b.values) == 2 {
-				execute_bot(bots, output, k)
+				executeBot(bots, output, k)
 				executed = append(executed, k)
 			}
 		}
@@ -78,66 +78,66 @@ func main() {
 	fmt.Printf("Part 2: %d\n", result)
 }
 
-func execute_bot(bots map[int]*Bot, out map[int]*[]int, bot_id int) {
-	bot := bots[bot_id]
+func executeBot(bots map[int]*bot, out map[int]*[]int, botID int) {
+	refBot := bots[botID]
 	//fmt.Printf("Bot %d, vals %v, %v low -> %d; %v high -> %d\n", bot_id, bots[bot_id].values, bots[bot_id].low_bot, bots[bot_id].id_low, bots[bot_id].high_bot, bots[bot_id].id_high)
-	if len(bot.values) == 2 {
-		if (bot.values[0] == 61 && bot.values[1] == 17) || (bot.values[0] == 17 && bot.values[1] == 61) {
-			fmt.Printf("Part 1: id - %d vs %v\n", bot_id, bot.values)
+	if len(refBot.values) == 2 {
+		if (refBot.values[0] == 61 && refBot.values[1] == 17) || (refBot.values[0] == 17 && refBot.values[1] == 61) {
+			fmt.Printf("Part 1: id - %d vs %v\n", botID, refBot.values)
 		}
-		var low_dest_arr *[]int
-		var high_dest_arr *[]int
+		var lowDestArr *[]int
+		var highDestArr *[]int
 
-		if bot.low_bot {
-			if bots[bot.id_low] == nil {
-				bots[bot.id_low] = new(Bot)
+		if refBot.lowBot {
+			if bots[refBot.idLow] == nil {
+				bots[refBot.idLow] = new(bot)
 			}
-			low_dest_arr = &(bots[bot.id_low].values)
+			lowDestArr = &(bots[refBot.idLow].values)
 		} else {
-			low_dest_arr = out[bot.id_low]
-			if low_dest_arr == nil {
-				out[bot.id_low] = new([]int)
-				low_dest_arr = out[bot.id_low]
+			lowDestArr = out[refBot.idLow]
+			if lowDestArr == nil {
+				out[refBot.idLow] = new([]int)
+				lowDestArr = out[refBot.idLow]
 			}
 		}
 
-		if bot.high_bot {
-			if bots[bot.id_high] == nil {
-				bots[bot.id_high] = new(Bot)
+		if refBot.highBot {
+			if bots[refBot.idHigh] == nil {
+				bots[refBot.idHigh] = new(bot)
 			}
-			high_dest_arr = &(bots[bot.id_high].values)
+			highDestArr = &(bots[refBot.idHigh].values)
 		} else {
-			high_dest_arr = out[bot.id_high]
-			if high_dest_arr == nil {
-				out[bot.id_high] = new([]int)
-				high_dest_arr = out[bot.id_high]
+			highDestArr = out[refBot.idHigh]
+			if highDestArr == nil {
+				out[refBot.idHigh] = new([]int)
+				highDestArr = out[refBot.idHigh]
 			}
 		}
 
 		//fmt.Println(bot_id)
-		*low_dest_arr = append(*low_dest_arr, min(bot.values))
-		*high_dest_arr = append(*high_dest_arr, max(bot.values))
-		bot.values = []int{}
+		*lowDestArr = append(*lowDestArr, min(refBot.values))
+		*highDestArr = append(*highDestArr, max(refBot.values))
+		refBot.values = []int{}
 	}
 }
 
 func min(v []int) int {
 	if v[0] < v[1] {
 		return v[0]
-	} else {
-		return v[1]
 	}
+	return v[1]
+
 }
 
 func max(v []int) int {
 	if v[0] > v[1] {
 		return v[0]
-	} else {
-		return v[1]
 	}
+	return v[1]
+
 }
 
-func read_lines(f *os.File) []string {
+func readLines(f *os.File) []string {
 	var data []string
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

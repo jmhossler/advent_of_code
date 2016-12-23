@@ -15,16 +15,16 @@ func main() {
 	f, err := os.Create("screen.pgm")
 	check(err)
 
-	information := read_input("input")
+	information := readInput("input")
 	for _, line := range information {
-		run_command(line)
+		runCommand(line)
 	}
-	write_image(f)
+	writeImage(f)
 
-	fmt.Printf("%d pixels on\n", count_on())
+	fmt.Printf("%d pixels on\n", countOn())
 }
 
-func write_image(f *os.File) {
+func writeImage(f *os.File) {
 	w := bufio.NewWriter(f)
 	w.WriteString("P2\n50 6\n255\n")
 	for _, row := range screen {
@@ -40,39 +40,39 @@ func write_image(f *os.File) {
 	w.Flush()
 }
 
-func run_command(cmd string) {
+func runCommand(cmd string) {
 	fields := strings.Fields(cmd)
 	switch fields[0] {
 	case "rect":
 		info := strings.Split(fields[1], "x")
 		a, _ := strconv.Atoi(info[0])
 		b, _ := strconv.Atoi(info[1])
-		call_rect(a, b)
+		callRect(a, b)
 	case "rotate":
 		info := strings.Split(fields[2], "=")
 		a, _ := strconv.Atoi(info[1])
 		b, _ := strconv.Atoi(fields[4])
 		if fields[1] == "row" {
-			rotate_row(a, b)
+			rotateRow(a, b)
 		} else {
-			rotate_col(a, b)
+			rotateCol(a, b)
 		}
 	}
 }
 
-func count_on() int {
+func countOn() int {
 	var count int
 	for _, row := range screen {
 		for _, pix := range row {
 			if pix {
-				count += 1
+				count++
 			}
 		}
 	}
 	return count
 }
 
-func call_rect(a, b int) {
+func callRect(a, b int) {
 	for i := 0; i < b && i < len(screen); i++ {
 		for j := 0; j < a && j < len(screen[i]); j++ {
 			screen[i][j] = true
@@ -80,27 +80,27 @@ func call_rect(a, b int) {
 	}
 }
 
-func rotate_row(a, b int) {
-	new_col := make([]bool, 50)
+func rotateRow(a, b int) {
+	newCol := make([]bool, 50)
 	for i := 0; i < 50; i++ {
-		new_col[(i+b)%50] = screen[a][i]
+		newCol[(i+b)%50] = screen[a][i]
 	}
 	for i := 0; i < 50; i++ {
-		screen[a][i] = new_col[i]
+		screen[a][i] = newCol[i]
 	}
 }
 
-func rotate_col(a, b int) {
-	new_col := make([]bool, 6)
+func rotateCol(a, b int) {
+	newCol := make([]bool, 6)
 	for i := 0; i < 6; i++ {
-		new_col[(i+b)%6] = screen[i][a]
+		newCol[(i+b)%6] = screen[i][a]
 	}
 	for i := 0; i < 6; i++ {
-		screen[i][a] = new_col[i]
+		screen[i][a] = newCol[i]
 	}
 }
 
-func shift_row(a int) {
+func shiftRow(a int) {
 	a = a % len(screen[a])
 	temp := screen[a][0]
 	for i := 1; i < len(screen[a]); i++ {
@@ -109,7 +109,7 @@ func shift_row(a int) {
 	screen[a][0] = temp
 }
 
-func shift_col(a int) {
+func shiftCol(a int) {
 	a = a % len(screen)
 	temp := screen[0][a]
 	for i := 1; i < len(screen); i++ {
@@ -118,7 +118,7 @@ func shift_col(a int) {
 	screen[0][a] = temp
 }
 
-func read_input(filename string) []string {
+func readInput(filename string) []string {
 	fp, err := os.Open(filename)
 	check(err)
 	scanner := bufio.NewScanner(fp)

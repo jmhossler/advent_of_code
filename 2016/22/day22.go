@@ -40,7 +40,7 @@ func countViablePairs(n map[int]map[int]node) int {
 		for _, b := range yMap {
 			for _, a := range notEmpty {
 				if b != a && a.used <= (b.size-b.used) {
-					count += 1
+					count++
 				}
 			}
 		}
@@ -77,31 +77,9 @@ func displayNodes(n map[int]map[int]node) {
 	}
 }
 
-func isHigh(n map[int]map[int]node, x, y int) bool {
-	var sum int
-	var num int
-	if n, ok := n[x-1][y]; ok {
-		sum += n.size
-		num++
-	}
-	if n, ok := n[x+1][y]; ok {
-		sum += n.size
-		num++
-	}
-	if n, ok := n[x][y-1]; ok {
-		sum += n.size
-		num++
-	}
-	if n, ok := n[x][y+1]; ok {
-		sum += n.size
-		num++
-	}
-	return true
-}
-
 func getMaxX(n map[int]map[int]node) int {
 	max := 0
-	for k, _ := range n {
+	for k := range n {
 		if k > max {
 			max = k
 		}
@@ -112,7 +90,7 @@ func getMaxX(n map[int]map[int]node) int {
 func getMaxY(n map[int]map[int]node) int {
 	max := 0
 	for _, sub := range n {
-		for k, _ := range sub {
+		for k := range sub {
 			if k > max {
 				max = k
 			}

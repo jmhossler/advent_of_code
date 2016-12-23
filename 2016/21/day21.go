@@ -23,6 +23,12 @@ var reverseMap = map[int]int{
 	0: 7,
 }
 
+const (
+	left  = "left"
+	right = "right"
+	based = "based"
+)
+
 func main() {
 	flag.Parse()
 	fmt.Println("Day 21 of Advent of Code 2016")
@@ -45,18 +51,18 @@ func unScramble(scrambled []byte, commands []string) string {
 		case "rotate":
 			dir := fields[1]
 			var x int
-			if dir == "based" {
+			if dir == based {
 				char := fields[6][0]
-				dir = "left"
+				dir = left
 				index := getIndex(scrambled, char)
 				for getIndex(scrambled, char) != reverseMap[index] {
 					scrambled = rotatePassword(scrambled, dir, 1)
 				}
 			} else {
-				if dir == "left" {
-					dir = "right"
+				if dir == left {
+					dir = right
 				} else {
-					dir = "left"
+					dir = left
 				}
 				x, _ = strconv.Atoi(fields[2])
 				scrambled = rotatePassword(scrambled, dir, x)
@@ -122,14 +128,14 @@ func scrambler(password []byte, commands []string) string {
 		case "rotate":
 			dir := fields[1]
 			var x int
-			if dir == "based" {
+			if dir == based {
 				char := fields[6][0]
-				dir = "right"
+				dir = right
 				x = getIndex(password, char)
 				if x > 3 {
-					x += 1
+					x++
 				}
-				x += 1
+				x++
 			} else {
 				x, _ = strconv.Atoi(fields[2])
 			}
@@ -170,7 +176,7 @@ func rotatePassword(p []byte, dir string, n int) []byte {
 }
 
 func rotateOnce(p []byte, dir string) []byte {
-	if dir == "left" {
+	if dir == left {
 		return append(p[1:], p[0])
 	}
 	return append(p[len(p)-1:], p[:len(p)-1]...)

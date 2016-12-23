@@ -7,27 +7,27 @@ import (
 	"strings"
 )
 
-type Coord struct {
+type coord struct {
 	x, y int
 }
 
 var keypad [][]int
 
-var one rune = '1'
-var two rune = '2'
-var three rune = '3'
-var four rune = '4'
-var five rune = '5'
+var one = '1'
+var two = '2'
+var three = '3'
+var four = '4'
+var five = '5'
 var six = '6'
 var seven = '7'
 var eight = '8'
 var nine = '9'
-var A = 'A'
-var B = 'B'
-var C rune = 'C'
-var D rune = 'D'
+var a = 'A'
+var b = 'B'
+var c = 'C'
+var d = 'D'
 
-var new_keypad = [][]*rune{[]*rune{nil, nil, &one, nil, nil}, []*rune{nil, &two, &three, &four, nil}, []*rune{&five, &six, &seven, &eight, &nine}, []*rune{nil, &A, &B, &C, nil}, []*rune{nil, nil, &D, nil, nil}}
+var newKeypad = [][]*rune{[]*rune{nil, nil, &one, nil, nil}, []*rune{nil, &two, &three, &four, nil}, []*rune{&five, &six, &seven, &eight, &nine}, []*rune{nil, &a, &b, &c, nil}, []*rune{nil, nil, &d, nil, nil}}
 
 func main() {
 	fmt.Println("Day 2 of Advent of Code 2016")
@@ -39,77 +39,77 @@ func main() {
 	input := strings.Split(string(data), "\n")
 
 	var code string
-	var new_code string
-	curr_pos := Coord{1, 1}
-	pt_2_pos := Coord{0, 2}
+	var newCode string
+	currPos := coord{1, 1}
+	pt2Pos := coord{0, 2}
 	for i := 0; i < len(input)-1; i++ {
-		final_coord := get_val(input[i], curr_pos)
-		new_final_coord := mod_get_val(input[i], pt_2_pos)
+		finalCoord := getVal(input[i], currPos)
+		newFinalCoord := modGetVal(input[i], pt2Pos)
 
-		code += coord_to_val(final_coord)
-		new_code += mod_coord_to_val(new_final_coord)
-		curr_pos = final_coord
-		pt_2_pos = new_final_coord
+		code += coordToVal(finalCoord)
+		newCode += modCoordToVal(newFinalCoord)
+		currPos = finalCoord
+		pt2Pos = newFinalCoord
 	}
 
 	fmt.Printf("Part 1: Bathroom code %s\n", code)
-	fmt.Printf("Part 2: Bathroom code %s\n", new_code)
+	fmt.Printf("Part 2: Bathroom code %s\n", newCode)
 }
 
-func get_val(input string, start_pos Coord) Coord {
+func getVal(input string, startPos coord) coord {
 	for i := 0; i < len(input); i++ {
 		if input[i] == 'U' {
-			start_pos.y = start_pos.y - 1
-			if start_pos.y < 0 {
-				start_pos.y = 0
+			startPos.y = startPos.y - 1
+			if startPos.y < 0 {
+				startPos.y = 0
 			}
 		} else if input[i] == 'D' {
-			start_pos.y = start_pos.y + 1
-			if start_pos.y > 2 {
-				start_pos.y = 2
+			startPos.y = startPos.y + 1
+			if startPos.y > 2 {
+				startPos.y = 2
 			}
 		} else if input[i] == 'L' {
-			start_pos.x = start_pos.x - 1
-			if start_pos.x < 0 {
-				start_pos.x = 0
+			startPos.x = startPos.x - 1
+			if startPos.x < 0 {
+				startPos.x = 0
 			}
 		} else if input[i] == 'R' {
-			start_pos.x = start_pos.x + 1
-			if start_pos.x > 2 {
-				start_pos.x = 2
+			startPos.x = startPos.x + 1
+			if startPos.x > 2 {
+				startPos.x = 2
 			}
 		}
 	}
 
-	return start_pos
+	return startPos
 }
 
-func mod_get_val(input string, start_pos Coord) Coord {
+func modGetVal(input string, startPos coord) coord {
 	for i := 0; i < len(input); i++ {
-		d_coord := Coord{0, 0}
+		dCoord := coord{0, 0}
 		if input[i] == 'U' {
-			d_coord.y = -1
+			dCoord.y = -1
 		} else if input[i] == 'D' {
-			d_coord.y = 1
+			dCoord.y = 1
 		} else if input[i] == 'L' {
-			d_coord.x = -1
+			dCoord.x = -1
 		} else if input[i] == 'R' {
-			d_coord.x = 1
+			dCoord.x = 1
 		}
-		new_coord := Coord{start_pos.x + d_coord.x, start_pos.y + d_coord.y}
-		if new_coord.x < 5 && new_coord.x >= 0 && new_coord.y < 5 && new_coord.y >= 0 {
-			if new_keypad[new_coord.y][new_coord.x] != nil {
-				start_pos = new_coord
+		newCoord := coord{startPos.x + dCoord.x, startPos.y + dCoord.y}
+		if newCoord.x < 5 && newCoord.x >= 0 && newCoord.y < 5 && newCoord.y >= 0 {
+			if newKeypad[newCoord.y][newCoord.x] != nil {
+				startPos = newCoord
 			}
 		}
 	}
-	return start_pos
+	return startPos
 }
 
-func coord_to_val(c Coord) string {
+func coordToVal(c coord) string {
 	return strconv.Itoa(keypad[c.y][c.x])
 }
 
-func mod_coord_to_val(c Coord) string {
-	return string(*new_keypad[c.y][c.x])
+func modCoordToVal(c coord) string {
+	return string(*newKeypad[c.y][c.x])
 }

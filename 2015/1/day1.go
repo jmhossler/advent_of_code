@@ -22,9 +22,9 @@ func main() {
 			index = i
 		}
 		if str[i] == '(' {
-			floor += 1
+			floor++
 		} else if str[i] == ')' {
-			floor -= 1
+			floor--
 		}
 	}
 
