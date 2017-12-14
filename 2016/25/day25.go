@@ -29,18 +29,14 @@ func main() {
 	var a = make([]string, len(commands))
 	copy(a, commands)
 
-	/*
-		for i := 0; i < 1000; i++ {
-			globalString = ""
-			fmt.Println()
-			fmt.Println(i)
-			registers["a"] = i
-			execute(commands, 1000000)
-			if globalString[:10] == "0101010101" || globalString[:10] == "1010101010" {
-				fmt.Println(globalString)
-			}
-		}
-	*/
+  for i := 0; i < 1000; i++ {
+    globalString = ""
+    registers["a"] = i
+    execute(commands, 1000000)
+    if globalString[:10] == "0101010101" || globalString[:10] == "1010101010" {
+      fmt.Println(globalString)
+    }
+  }
 
 	fmt.Printf("Part 1: 192\n")
 
