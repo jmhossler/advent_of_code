@@ -55,7 +55,6 @@ hash_value = data.replace('\n', '')
 hex_grid = []
 total_count = 0
 for i in range(0, 128):
-    print(i)
     row_hash = hash_value + '-' + str(i)
     row = convert_hash(knot_hash(row_hash))
     hex_grid.append(row)
@@ -64,30 +63,32 @@ for i in range(0, 128):
 print(total_count)
 
 def surrounding(grid, coord):
-    for i in range(-1, 2, 2):
-        for j in range(-1, 2, 2):
-            yield (i, j)
+    for adjustment in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+        if (coord[0] + adjustment[0] < 128 and coord[0] + adjustment[0] >= 0 and coord[1] + adjustment[1] < 128 and coord[1] + adjustment[1] >= 0):
+            yield (coord[0] + adjustment[0], coord[1] + adjustment[1])
 
 def get_adjacent(grid, coord):
     adjacent = []
     for other in surrounding(grid, coord):
         if grid[other[0]][other[1]] == '1':
             adjacent.append(other)
+
+
     return adjacent
 
 adjacents = []
 regions = 0
 for i in range(0, len(hex_grid)):
     for j in range(0, len(hex_grid[i])):
-        print(adjacents)
         if hex_grid[i][j] == '1' and (i, j) not in adjacents:
             regions += 1
             queue = [(i, j)]
             while len(queue) != 0:
                 curr = queue.pop(0)
-                adjacents.append(curr)
+                if curr not in adjacents:
+                    adjacents.append(curr)
                 for val in get_adjacent(hex_grid, curr):
-                    if val not in queue:
+                    if val not in queue and val not in adjacents:
                         queue.append(val)
 
 print(regions)
