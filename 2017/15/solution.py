@@ -11,7 +11,7 @@ def a_generator(n):
     a_val = 883
     count = 0
     while count < n:
-        a_val = (a_val * a_factor) % modulo_val
+        a_val = int((a_val * a_factor) % modulo_val)
         if a_val % 4 == 0:
             yield a_val
             count += 1
@@ -20,7 +20,7 @@ def b_generator(n):
     b_val = 879
     count = 0
     while count < n:
-        b_val = (b_val * b_factor) % modulo_val
+        b_val = int((b_val * b_factor) % modulo_val)
         if b_val % 8 == 0:
             yield b_val
             count += 1

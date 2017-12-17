@@ -68,6 +68,8 @@ class LinkedList:
     def swap_p(self, data):
         a_val = data.split('/')[0]
         b_val = data.split('/')[1]
+        nodes = [self._quick_access[node] for node in self._quick_access]
+        self._quick_access = {node.get_val(): node for node in nodes}
         node_a = self._quick_access[a_val]
         node_b = self._quick_access[b_val]
         self.swap_n(node_a, node_b)
@@ -128,14 +130,18 @@ def execute(programs, dance):
     return functions[dance[0]](programs, dance[1:])
 
 ll = LinkedList(programs)
+original_ll = LinkedList(programs)
 for dance in dance_moves:
     ll.execute(dance)
 
-print(ll.join())
-for i in range(0, 1000000000):
-    if i % 1000000 == 0:
-        print(i)
+count = 1
+while original_ll.join() != ll.join():
     for dance in dance_moves:
-        programs = execute(programs, dance)
+        ll.execute(dance)
+    count += 1
 
-print(''.join(programs))
+
+for i in range(0, 1000000000 % count):
+    for dance in dance_moves:
+        ll.execute(dance)
+print(ll.join())
