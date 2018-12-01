@@ -1,7 +1,7 @@
 import sys
 
 def frequency_total(frequencies):
-    return sum([int(frequency) for frequency in frequencies])
+    return sum(frequencies)
 
 def frequency_duplicate(frequencies):
     previous_frequencies = []
@@ -20,6 +20,6 @@ def _generate_frequencies(frequencies):
 
 if __name__ == '__main__':
     with open(sys.argv[1], 'r') as f:
-        frequencies = f.readlines()
+        frequencies = [int(row) for row in f.readlines()]
     print(frequency_total(frequencies))
     print(frequency_duplicate(frequencies))
