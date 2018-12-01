@@ -1,25 +1,19 @@
 import sys
+from itertools import accumulate, cycle
 
-def frequency_total(frequencies):
-    return sum(frequencies)
+def get_total_frequency(frequency_deltas):
+    return sum(frequency_deltas)
 
-def frequency_duplicate(frequencies):
-    previous_frequencies = []
-    for frequency in _generate_frequencies(frequencies):
+def find_duplicate_frequency(frequency_deltas):
+    previous_frequencies = {0}
+    for frequency in accumulate(cycle(frequency_deltas)):
+        print(frequency)
         if frequency in previous_frequencies:
             return frequency
-        previous_frequencies.append(frequency)
-
-def _generate_frequencies(frequencies):
-    frequency = 0
-    index = 0
-    while True:
-        yield frequency
-        frequency += int(frequencies[index])
-        index = (index + 1) % len(frequencies)
+        previous_frequencies.add(frequency)
 
 if __name__ == '__main__':
     with open(sys.argv[1], 'r') as f:
-        frequencies = [int(row) for row in f.readlines()]
-    print(frequency_total(frequencies))
-    print(frequency_duplicate(frequencies))
+        FREQUENCY_DELTAS = [int(row) for row in f.readlines()]
+    print(get_total_frequency(FREQUENCY_DELTAS))
+    print(find_duplicate_frequency(FREQUENCY_DELTAS))

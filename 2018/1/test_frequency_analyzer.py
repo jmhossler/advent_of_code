@@ -1,6 +1,6 @@
 import pytest
 
-from solution import frequency_total, frequency_duplicate
+from solution import get_total_frequency, find_duplicate_frequency
 
 
 @pytest.mark.parametrize('frequencies, expected', [
@@ -10,7 +10,7 @@ from solution import frequency_total, frequency_duplicate
     ([-1, -2, -3], -6),
     ])
 def test_frequency_analyzer(frequencies, expected):
-    assert frequency_total(frequencies) == expected
+    assert get_total_frequency(frequencies) == expected
 
 @pytest.mark.parametrize('frequencies, expected', [
     ([+1, -2, +3, +1], 2),
@@ -20,4 +20,4 @@ def test_frequency_analyzer(frequencies, expected):
     ([+7, +7, -2, -7, -4], 14),
     ])
 def test_frequency_duplicate(frequencies, expected):
-    assert frequency_duplicate(frequencies) == expected
+    assert find_duplicate_frequency(frequencies) == expected
