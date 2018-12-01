@@ -1,2 +1,7 @@
 day[0-9]+
 *.exe
+.env
+
+2018/aoc
+
+__pycache__/
