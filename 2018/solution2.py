@@ -1,4 +1,7 @@
+import sys
 from itertools import combinations
+
+from common import read_strings
 
 
 def get_checksum(box_ids):
@@ -28,8 +31,11 @@ def remove_difference(a, b):
     return ''.join(i for i, j in zip(a, b) if i == j)
 
 
+def solution(file_name):
+    BOX_IDS = read_strings(file_name)
+    return (get_checksum(BOX_IDS),
+            get_common_letters(BOX_IDS))
+
+
 if __name__ == '__main__':
-    with open('input') as input_file:
-        BOX_IDS = input_file.readlines()
-    print(get_checksum(BOX_IDS))
-    print(get_common_letters(BOX_IDS))
+    print(solution(sys.argv[1]))

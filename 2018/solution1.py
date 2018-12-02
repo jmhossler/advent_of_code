@@ -1,8 +1,12 @@
 import sys
 from itertools import accumulate, cycle
 
+from common import read_numbers
+
+
 def get_total_frequency(frequency_deltas):
     return sum(frequency_deltas)
+
 
 def find_duplicate_frequency(frequency_deltas):
     previous_frequencies = {0}
@@ -10,8 +14,12 @@ def find_duplicate_frequency(frequency_deltas):
                 for frequency in accumulate(cycle(frequency_deltas))
                 if frequency in previous_frequencies or previous_frequencies.add(frequency))
 
+
+def solution(file_name):
+    FREQUENCY_DELTAS = read_numbers(file_name)
+    return (get_total_frequency(FREQUENCY_DELTAS),
+            find_duplicate_frequency(FREQUENCY_DELTAS))
+
+
 if __name__ == '__main__':
-    with open(sys.argv[1], 'r') as f:
-        FREQUENCY_DELTAS = [int(row) for row in f.readlines()]
-    print(get_total_frequency(FREQUENCY_DELTAS))
-    print(find_duplicate_frequency(FREQUENCY_DELTAS))
+    print(solution(sys.argv[1]))

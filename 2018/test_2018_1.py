@@ -1,6 +1,6 @@
 import pytest
 
-from solution1 import get_total_frequency, find_duplicate_frequency
+from solution1 import get_total_frequency, find_duplicate_frequency, solution
 
 
 @pytest.mark.parametrize('frequencies, expected', [
@@ -12,6 +12,7 @@ from solution1 import get_total_frequency, find_duplicate_frequency
 def test_frequency_analyzer(frequencies, expected):
     assert get_total_frequency(frequencies) == expected
 
+
 @pytest.mark.parametrize('frequencies, expected', [
     ([+1, -2, +3, +1], 2),
     ([+1, -1], 0),
@@ -21,3 +22,7 @@ def test_frequency_analyzer(frequencies, expected):
     ])
 def test_frequency_duplicate(frequencies, expected):
     assert find_duplicate_frequency(frequencies) == expected
+
+
+def test_solution():
+    assert solution('2018/input/input1.txt') == (402, 481)
