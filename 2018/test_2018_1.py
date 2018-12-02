@@ -1,6 +1,6 @@
 import pytest
 
-from solution import get_total_frequency, find_duplicate_frequency
+from solution1 import get_total_frequency, find_duplicate_frequency
 
 
 @pytest.mark.parametrize('frequencies, expected', [
