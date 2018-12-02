@@ -1,5 +1,7 @@
 #!/bin/bash
 
-mkdir -p 2018/$1
+mkdir -p ${AOC_YEAR}/$1
 
-curl -H "Cookie: session=${SESSION_COOKIE}" "https://adventofcode.com/2018/day/$1/input" > 2018/$1/input
+curl -H "Cookie: session=${SESSION_COOKIE}" "https://adventofcode.com/${AOC_YEAR}/day/$1/input" > ${AOC_YEAR}/$1/input
+
+cd ${AOC_YEAR}/$1
