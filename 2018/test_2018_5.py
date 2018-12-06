@@ -18,4 +18,4 @@ def test_improve_polymer():
 
 def test_solution():
     a, b = solution('2018/input/input5.txt')
-    assert (len(a), len(b)) == (10384, None)
+    assert (len(a), len(b)) == (10384, 5412)

@@ -1,16 +1,17 @@
 def break_down_polymer(code):
-    current_check = 0
-    while current_check < len(code) - 1:
-        if can_be_removed(code, current_check):
-            code = code[:current_check] + code[current_check+2:]
-            if current_check != 0:
-                current_check -= 1
+    polymer_chain = []
+    for letter in code:
+        if polymer_chain:
+            a = polymer_chain.pop()
+            if not can_be_removed(a, letter):
+                polymer_chain.append(a)
+                polymer_chain.append(letter)
         else:
-            current_check += 1
-    return code
+            polymer_chain.append(letter)
 
-def can_be_removed(code, current_index):
-    a, b = code[current_index], code[current_index+1]
+    return ''.join(polymer_chain)
+
+def can_be_removed(a, b):
     return (a.lower() == b.lower()
             and ((a.islower() and b.isupper())
                  or (a.isupper() and b.islower())))
