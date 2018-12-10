@@ -15,4 +15,4 @@ def test_get_high_score(players, marbles, expected):
     assert get_high_score(players, marbles) == expected
 
 def test_solution():
-    assert solution('2018/input/input9.txt') == (375465, None)
+    assert solution('2018/input/input9.txt') == (375465, 3037741441)
