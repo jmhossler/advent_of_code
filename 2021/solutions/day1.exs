@@ -2,25 +2,19 @@ defmodule DayOne do
   def main(input_file) do
     {:ok, sea_depths} = get_sea_depths(input_file)
 
-    %{increases: part_one_answer} = Enum.reduce(sea_depths, %{last: nil, increases: 0}, fn e, acc ->
-      if !is_nil(acc.last) and acc.last < e do
-        %{last: e, increases: acc.increases + 1}
-      else
-        %{last: e, increases: acc.increases}
-      end
-    end)
+    part_one_answer =
+      Enum.chunk_every(sea_depths, 2, 1, :discard)
+      |> Enum.filter(fn [a, b] -> a < b end)
+      |> length()
 
     IO.puts("Part one: #{part_one_answer}")
 
-    %{increases: part_two_answer} = Enum.chunk_every(sea_depths, 3, 1, :discard)
-    |> Enum.map(&Enum.sum(&1))
-    |> Enum.reduce(%{last: nil, increases: 0}, fn e, acc ->
-      if !is_nil(acc.last) and acc.last < e do
-        %{last: e, increases: acc.increases + 1}
-      else
-        %{last: e, increases: acc.increases}
-      end
-    end)
+    part_two_answer =
+      Enum.chunk_every(sea_depths, 3, 1, :discard)
+      |> Enum.map(&Enum.sum(&1))
+      |> Enum.chunk_every(2, 1, :discard)
+      |> Enum.filter(fn [a, b] -> a < b end)
+      |> length()
 
     IO.puts("Part two: #{part_two_answer}")
   end
