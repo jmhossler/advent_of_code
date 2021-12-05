@@ -12,7 +12,9 @@ defmodule DayFour do
       {:ok, contents} ->
         [instructions | unstructured_boards] = String.split(contents, "\n")
         {:ok, %{
-          instructions: instructions,
+          instructions: instructions
+                        |> String.split(",", trim: true)
+                        |> Enum.map(&String.to_integer/1),
           boards: unstructured_boards
                   |> Enum.chunk_by(&(&1 == ""))
                   |> Enum.filter(&(&1 != [""]))
